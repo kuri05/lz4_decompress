@@ -13,11 +13,11 @@ def main():
 
 	header = compressed_data[:4]
 
-	if header != 'XALZ':
-		sys.exit("[!] Wrong header, aborting...!")
+	if header != b'XALZ':
+		sys.exit("[!] Wrong header, aborting...! (%r)" % header)
 
 	packed_payload_len = compressed_data[8:12]
-	unpacked_payload_len = struct.unpack('<I', packed_payload_len)[0]
+	unpacked_payload_len = struct.unpack(b'<I', packed_payload_len)[0]
 	compressed_payload = compressed_data[12:]
 	decompressed_payload = lz4.block.decompress(compressed_payload, uncompressed_size=unpacked_payload_len)
 
@@ -28,8 +28,8 @@ def main():
 
 	with open(out_file, "wb") as decompressed_file:
 		decompressed_file.write(decompressed_payload)
-		print "[i] Success!"
-		print "[i] File [" + out_file + "] was created as result!"
+		print("[i] Success!")
+		print("[i] File [" + out_file + "] was created as result!")
 
 if __name__ == "__main__":
 	main()
